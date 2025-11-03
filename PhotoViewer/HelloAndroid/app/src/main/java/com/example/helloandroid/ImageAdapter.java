@@ -2,11 +2,15 @@ package com.example.helloandroid;
 
 // import 생략, 추가 : ‘Alt’+’Enter’
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +37,35 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         // 해당 위치의 이미지를 뷰에 설정
         Bitmap bitmap = imageList.get(position);
         holder.imageView.setImageBitmap(bitmap);
+        holder.imageView.setOnClickListener(v -> {
+            new AlertDialog.Builder(v.getContext())
+                    .setTitle("이미지 저장")
+                    .setMessage("이 이미지를 사진첩에 저장하시겠습니까?")
+                    .setPositiveButton("확인", (dialog, which) -> {
+                        // 이미지 저장 수행
+                        saveImageToGallery(bitmap, v.getContext());
+                    })
+                    .setNegativeButton("취소", null)
+                    .show();
+        });
+
     }
+
+    public static void saveImageToGallery(Bitmap bitmap, Context context) {
+        String savedImageURL = MediaStore.Images.Media.insertImage(
+                context.getContentResolver(),
+                bitmap,
+                "Image_" + System.currentTimeMillis(),
+                "Image downloaded from app"
+        );
+
+        if (savedImageURL != null) {
+            Toast.makeText(context, "사진이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "사진 저장에 실패했습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     @Override
     public int getItemCount() {
@@ -47,4 +79,5 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             imageView = itemView.findViewById(R.id.imageViewItem); // item_image.xml에 있는 ImageView
         }
     }
+
 }
