@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -26,6 +27,12 @@
             android:onClick="onClickUpload"
             android:text="새로운 이미지 게시" />
     </LinearLayout>
+
+    <Switch
+        android:id="@+id/switchToggleBg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="다크모드" />
 
     <TextView
         android:id="@+id/textView"

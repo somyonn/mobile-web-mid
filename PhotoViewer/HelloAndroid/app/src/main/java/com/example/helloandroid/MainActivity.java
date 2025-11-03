@@ -6,12 +6,15 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -56,10 +59,24 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    LinearLayout rootLayout;
+    Switch switchToggleBg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        rootLayout = findViewById(R.id.rootLayout);
+        switchToggleBg = findViewById(R.id.switchToggleBg);
+
+        switchToggleBg.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                rootLayout.setBackgroundColor(Color.BLACK);
+            } else {
+                rootLayout.setBackgroundColor(Color.WHITE);
+            }
+        });
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
