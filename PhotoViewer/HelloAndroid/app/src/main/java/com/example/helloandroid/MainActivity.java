@@ -1,6 +1,7 @@
 package com.example.helloandroid;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -98,6 +99,15 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             onClickDownload(null);  // 스와이프 리프레시 시 동기화 메서드 호출
         });
+
+        new AlertDialog.Builder(this)
+                .setTitle("도움말")
+                .setMessage("앱 사용에 도움이 필요하면 여기를 참고하세요.\n- 이미지 클릭 시 저장 가능\n- 동기화는 화면을 아래로 당기기나 버튼 클릭\n...")
+                .setPositiveButton("확인", (dialog, which) -> dialog.dismiss())
+                .setCancelable(false)
+                .show();
+
+        onClickDownload(null);
     }
 
     public void onClickDownload(View v) {
