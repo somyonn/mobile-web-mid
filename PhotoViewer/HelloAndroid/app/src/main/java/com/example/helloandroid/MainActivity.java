@@ -34,6 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,8 +60,11 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    //dark mode
     LinearLayout rootLayout;
     Switch switchToggleBg;
+    //swipe refresh
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +88,16 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
 
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+
         textView = findViewById(R.id.textView);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new ImageAdapter(new ArrayList<>()));
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            onClickDownload(null);  // 스와이프 리프레시 시 동기화 메서드 호출
+        });
     }
 
     public void onClickDownload(View v) {
@@ -97,6 +107,13 @@ public class MainActivity extends AppCompatActivity {
         taskDownload = new CloadImage();
         taskDownload.execute(site_url + "/api_root/Post/");
         textView.setText("다운로드 중...");
+        swipeRefreshLayout.setRefreshing(true);
+    }
+
+    private void stopRefreshing() {
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     public void onClickUpload(View v) {
@@ -267,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Bitmap> images) {
+            stopRefreshing();
             if (images.isEmpty()) {
                 textView.setText("불러올 이미지가 없습니다.");
                 recyclerView.setAdapter(null);
